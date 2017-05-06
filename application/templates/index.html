@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<title>DiaGen</title>
+
+
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/codemirror.css">
+		<link href="css/custom.css" rel="stylesheet">
+
+		<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+
+	</head>
+
+	<body>
+
+
+	<!--<nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">DiaGen</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="../navbar/">Default</a></li>
+            <li><a href="../navbar-static-top/">Static top</a></li>
+            <li><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>-->
+
+    <div id="code-segm" class="wrap">
+
+    <textarea id="textarea" name="textarea">
+    </textarea>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="canvas-panner"></div>
+
+    <div id="about" class="sidebar">
+			<div class="content">
+				<h2>Association types</h2>
+				<b>association</b> -<br>
+				<b>association</b> -&gt;<br>
+				<b>association</b> &lt;-&gt;<br>
+				<b>dependency</b> --&gt;<br>
+				<b>dependency</b> &lt;--&gt;<br>
+				<b>generalization</b> -:&gt;<br>
+				<b>generalization</b> &lt;:-<br>
+				<b>implementation</b> --:&gt;<br>
+				<b>implementation</b> &lt;:--<br>
+				<b>composition</b> +-<br>
+				<b>composition</b> +-&gt;<br>
+				<b>aggregation</b> o-<br>
+				<b>aggregation</b> o-&gt;<br>
+				<b>note</b> --<br>
+				<b>hidden</b> -/-<br>
+
+				<h2>Classifier types</h2>
+				[name]<br>
+				[&lt;abstract&gt; name]<br>
+				[&lt;instance&gt; name]<br>
+				[&lt;note&gt; name]<br>
+				[&lt;reference&gt; name]<br>
+				[&lt;package&gt; name]<br>
+				[&lt;frame&gt; name]<br>
+				[&lt;database&gt; name]<br>
+				[&lt;start&gt; name]<br>
+				[&lt;end&gt; name]<br>
+				[&lt;state&gt; name]<br>
+				[&lt;choice&gt; name]<br>
+				[&lt;input&gt; name]<br>
+				[&lt;sender&gt; name]<br>
+				[&lt;receiver&gt; name]<br>
+				[&lt;actor&gt; name]<br>
+				[&lt;usecase&gt; name]<br>
+				[&lt;label&gt; name]<br>
+				[&lt;hidden&gt; name]<br>
+
+				<h2>Directives</h2>
+				#arrowSize: 1<br>
+				#bendSize: 0.3<br>
+				#direction: down | right<br>
+				#gutter: 5<br>
+				#edgeMargin: 0<br>
+				#edges: hard | rounded<br>
+				#fill: #eee8d5; #fdf6e3<br>
+				#fillArrows: false<br>
+				#font: Calibri<br>
+				#fontSize: 12<br>
+				#leading: 1.25<br>
+				#lineWidth: 3<br>
+				#padding: 8<br>
+				#spacing: 40<br>
+				#stroke: #33322E<br>
+				#title: filename<br>
+				#zoom: 1<br>
+
+				<h2>Custom classifier styles</h2>
+				<label>A directive that starts with "." define a classifier style.</label>
+
+				#.box: fill=#8f8 dashed<br>
+				#.blob: visual=ellipse<br>
+				[&lt;box&gt; GreenBox]<br>
+				[&lt;blob&gt; HideousBlob]
+
+				<label>Available visuals are</label>
+
+				visual=actor<br>
+				visual=class<br>
+				visual=database<br>
+				visual=ellipse<br>
+				visual=end<br>
+				visual=frame<br>
+				visual=hidden<br>
+				visual=input<br>
+				visual=none<br>
+				visual=note<br>
+				visual=package<br>
+				visual=receiver<br>
+				visual=rhomb<br>
+				visual=roundrect<br>
+				visual=sender<br>
+				visual=start
+
+				<label>Available modifiers are</label>
+
+				center<br>
+				bold<br>
+				underline<br>
+				italic<br>
+				dashed<br>
+				empty
+			</div>
+
+			<div class="logo-background"></div>
+		</div>
+
+	<div id="linemarker"></div>
+
+    <div class="tools">
+			<a class="logo" href="javascript:void(0)" onclick="diagen.toggleSidebar(&#39;about&#39;)" title="Об DiaGen"><h1>DiaGen</h1> &nbsp;</a>
+			<a href="javascript:void(0)" onclick="diagen.toggleSidebar(&#39;about&#39;)" title="Об DiaGen">
+				<img src="./img/info.png">
+			</a>
+			<a href="javascript:diagen.discardCurrentGraph()" title="Справка о языке">
+				<img src="./img/book.png">
+			</a>
+			<a href="javascript:diagen.discardCurrentGraph()" title="Сохранить диаграмму">
+				<img src="./img/export.png">
+			</a>
+			<a href="javascript:diagen.discardCurrentGraph()" title="Удалить эту диаграмму">
+				<img src="./img/delete.png">
+			</a>
+
+
+
+			<span id="tooltip"></span>
+
+			<div class="canvas-tools" id="canvas-tools">
+				<a href="javascript:diagen.refreshImage()" title="Обновить изображение">
+					<img src="./img/refresh.png">
+				</a>
+				<a href="javascript:diagen.magnifyViewport(2)" title="Увеличить изображение">
+					<img src="./img/plus.png">
+				</a>
+				<a href="javascript:diagen.resetViewport()" title="Восстановить масштаб изображения">
+					<img src="./img/revert.png">
+				</a>
+				<a href="javascript:diagen.magnifyViewport(-2)" title="Уменьшить изображение">
+					<img src="./img/minus.png">
+				</a>
+			</div>
+	</div>
+
+
+    </div>
+
+
+    
+
+<script type="text" id="defaultGraph">
+[Pirate|eyeCount: Int|raid();pillage()|
+  [beard]--[parrot]
+  [beard]-:>[foul mouth]
+]
+
+[<abstract>Marauder]<:--[Pirate]
+[Pirate]- 0..7[mischief]
+[jollyness]->[Pirate]
+[jollyness]->[rum]
+[jollyness]->[singing]
+[Pirate]-> *[rum|tastiness: Int|swig()]
+[Pirate]->[singing]
+[singing]<->[rum]
+
+[<start>st]->[<state>plunder]
+[plunder]->[<choice>more loot]
+[more loot]->[st]
+[more loot] no ->[<end>e]
+
+[<actor>Sailor] - [<usecase>shiver me;timbers]
+</script>
+
+	<script src="js/lodash.min.js"></script>
+	<script src="js/skanaar.canvas.js"></script>
+	<script src="js/skanaar.svg.js"></script>
+	<script src="js/skanaar.util.js"></script>
+	<script src="js/skanaar.vector.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/codemirror.js"></script>
+
+
+
+	<script type="text/javascript" src="js/diagen.js"></script>
+
+
+	</body>
+</html>

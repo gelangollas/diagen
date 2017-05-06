@@ -1,0 +1,24 @@
+encoding "utf8";
+
+TTextMinerConfig {
+  Dictionary = "dic.gzt";
+  PrettyOutput = "output.html";
+  NumThreads = 3;
+
+  Input = {
+    File = "input.txt";
+  }
+
+  Output = {
+    File = "output.xml";
+  }
+
+
+  Articles = [
+    { Name = "компоненты" }
+  ]
+
+  Facts = [
+    { Name = "Component" }
+  ]
+}

@@ -1,0 +1,24 @@
+encoding "utf8";
+
+import "base.proto";
+import "articles_base.proto";
+import "facttypes.proto";
+
+TAuxDicArticle "тип_компонента"
+{
+    key = {"модуль" gram="sg"},
+    key = {"класс" gram="sg"},
+    key = {"библиотека" gram="sg"},
+    key = {"функция" gram="sg"}
+}
+
+TAuxDicArticle "APRO"
+{
+    key = {"данный" gram="A"}
+}
+
+TAuxDicArticle "компоненты"
+{
+    key = { "tomita:grammar.cxx" type=CUSTOM }
+}
+

@@ -1,0 +1,11 @@
+import "base.proto";
+import "facttypes_base.proto";
+
+message Component: NFactType.TFact 
+{
+	required string Type = 1;
+	optional string Name = 2;
+	optional string Description = 3;
+	optional bool Pointer = 4;
+}
+
