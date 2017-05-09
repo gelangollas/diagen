@@ -1,2 +1,6 @@
 *.exe
 *.bin
+*\__pycache__
+
+*.pyc
+*.pyo
