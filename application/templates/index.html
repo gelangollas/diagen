@@ -7,10 +7,11 @@
 		
 		<title>DiaGen</title>
 
+		{% load static %}
 
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<link rel="stylesheet" href="css/codemirror.css">
-		<link href="css/custom.css" rel="stylesheet">
+		<link href="{% static 'css/codemirror.css' %}" rel="stylesheet">
+		<link href="{% static 'css/custom.css' %}" rel="stylesheet">
+		<link href="{% static 'css/load-animation.css' %}" rel="stylesheet">
 
 		<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 
@@ -18,28 +19,6 @@
 
 	<body>
 
-
-	<!--<nav class="navbar navbar-default">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">DiaGen</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="../navbar/">Default</a></li>
-            <li><a href="../navbar-static-top/">Static top</a></li>
-            <li><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>-->
 
     <div id="code-segm" class="wrap">
 
@@ -52,62 +31,7 @@
 
     <div id="about" class="sidebar">
 			<div class="content">
-				<h2>Association types</h2>
-				<b>association</b> -<br>
-				<b>association</b> -&gt;<br>
-				<b>association</b> &lt;-&gt;<br>
-				<b>dependency</b> --&gt;<br>
-				<b>dependency</b> &lt;--&gt;<br>
-				<b>generalization</b> -:&gt;<br>
-				<b>generalization</b> &lt;:-<br>
-				<b>implementation</b> --:&gt;<br>
-				<b>implementation</b> &lt;:--<br>
-				<b>composition</b> +-<br>
-				<b>composition</b> +-&gt;<br>
-				<b>aggregation</b> o-<br>
-				<b>aggregation</b> o-&gt;<br>
-				<b>note</b> --<br>
-				<b>hidden</b> -/-<br>
-
-				<h2>Classifier types</h2>
-				[name]<br>
-				[&lt;abstract&gt; name]<br>
-				[&lt;instance&gt; name]<br>
-				[&lt;note&gt; name]<br>
-				[&lt;reference&gt; name]<br>
-				[&lt;package&gt; name]<br>
-				[&lt;frame&gt; name]<br>
-				[&lt;database&gt; name]<br>
-				[&lt;start&gt; name]<br>
-				[&lt;end&gt; name]<br>
-				[&lt;state&gt; name]<br>
-				[&lt;choice&gt; name]<br>
-				[&lt;input&gt; name]<br>
-				[&lt;sender&gt; name]<br>
-				[&lt;receiver&gt; name]<br>
-				[&lt;actor&gt; name]<br>
-				[&lt;usecase&gt; name]<br>
-				[&lt;label&gt; name]<br>
-				[&lt;hidden&gt; name]<br>
-
-				<h2>Directives</h2>
-				#arrowSize: 1<br>
-				#bendSize: 0.3<br>
-				#direction: down | right<br>
-				#gutter: 5<br>
-				#edgeMargin: 0<br>
-				#edges: hard | rounded<br>
-				#fill: #eee8d5; #fdf6e3<br>
-				#fillArrows: false<br>
-				#font: Calibri<br>
-				#fontSize: 12<br>
-				#leading: 1.25<br>
-				#lineWidth: 3<br>
-				#padding: 8<br>
-				#spacing: 40<br>
-				#stroke: #33322E<br>
-				#title: filename<br>
-				#zoom: 1<br>
+				
 
 				<h2>Custom classifier styles</h2>
 				<label>A directive that starts with "." define a classifier style.</label>
@@ -154,16 +78,21 @@
     <div class="tools">
 			<a class="logo" href="javascript:void(0)" onclick="diagen.toggleSidebar(&#39;about&#39;)" title="Об DiaGen"><h1>DiaGen</h1> &nbsp;</a>
 			<a href="javascript:void(0)" onclick="diagen.toggleSidebar(&#39;about&#39;)" title="Об DiaGen">
-				<img src="./img/info.png">
+				<img src="{% static 'img/info.png' %}">
 			</a>
-			<a href="javascript:diagen.discardCurrentGraph()" title="Справка о языке">
-				<img src="./img/book.png">
+			<a href="http://translate.plantuml.com/ru/PlantUML_Language_Reference_Guide_RU.pdf" title="Справка о языке">
+				<img src="{% static 'img/book.png' %}">
 			</a>
-			<a href="javascript:diagen.discardCurrentGraph()" title="Сохранить диаграмму">
-				<img src="./img/export.png">
+			<a id="savebutton" href="javascript:void(0)" download="diagram.png" title="Сохранить диаграмму">
+				<img src="{% static 'img/export.png' %}">
 			</a>
+
+			<a id="generatebutton" title="Сгенерировать диаграмму из текста">
+				<img src="{% static 'img/generate.png' %}">
+			</a>
+
 			<a href="javascript:diagen.discardCurrentGraph()" title="Удалить эту диаграмму">
-				<img src="./img/delete.png">
+				<img src="{% static 'img/delete.png' %}">
 			</a>
 
 
@@ -171,61 +100,76 @@
 			<span id="tooltip"></span>
 
 			<div class="canvas-tools" id="canvas-tools">
-				<a href="javascript:diagen.refreshImage()" title="Обновить изображение">
-					<img src="./img/refresh.png">
+				<a id="refreshimage" href="javascript:diagen.refreshImage()" data-url="{% url 'get_diagram' %}" title="Обновить изображение">
+					<img src="{% static 'img/refresh.png' %}">
 				</a>
 				<a href="javascript:diagen.magnifyViewport(2)" title="Увеличить изображение">
-					<img src="./img/plus.png">
+					<img src="{% static 'img/plus.png' %}">
 				</a>
 				<a href="javascript:diagen.resetViewport()" title="Восстановить масштаб изображения">
-					<img src="./img/revert.png">
+					<img src="{% static 'img/revert.png' %}">
 				</a>
 				<a href="javascript:diagen.magnifyViewport(-2)" title="Уменьшить изображение">
-					<img src="./img/minus.png">
+					<img src="{% static 'img/minus.png' %}">
 				</a>
 			</div>
 	</div>
 
+	<div id="modal" class="modal">
+
+	  <!-- Modal content -->
+	  <div class="modal-content">
+	    <p>Вставьте текст, который является описанием программы, в поле снизу.</p>
+
+	    <hr color="#cccccc" size="1">
+	    <textarea name="generatetext" id="generatetext" rows="10" class="gentext"></textarea>
+	    <div align="right">
+		    <a class="button" id="generatesubmit" data-url="{% url 'generate_diagram' %}">Сгенерировать</a>
+		    <a class="button" id="closebybtn">Отмена</a>
+	    </div>
+	  </div>
+
+	</div>
+
+
+	<div id="load-animation" class="modal">
+		<div id="floatingCirclesG">
+			<div class="f_circleG" id="frotateG_01"></div>
+			<div class="f_circleG" id="frotateG_02"></div>
+			<div class="f_circleG" id="frotateG_03"></div>
+			<div class="f_circleG" id="frotateG_04"></div>
+			<div class="f_circleG" id="frotateG_05"></div>
+			<div class="f_circleG" id="frotateG_06"></div>
+			<div class="f_circleG" id="frotateG_07"></div>
+			<div class="f_circleG" id="frotateG_08"></div>
+		</div>
+	</div>
 
     </div>
 
 
     
 
-<script type="text" id="defaultGraph">
-[Pirate|eyeCount: Int|raid();pillage()|
-  [beard]--[parrot]
-  [beard]-:>[foul mouth]
-]
+<script type="text" id="defaultGraph">@startuml
+class Object << general >>
+Object <|--- ArrayList
 
-[<abstract>Marauder]<:--[Pirate]
-[Pirate]- 0..7[mischief]
-[jollyness]->[Pirate]
-[jollyness]->[rum]
-[jollyness]->[singing]
-[Pirate]-> *[rum|tastiness: Int|swig()]
-[Pirate]->[singing]
-[singing]<->[rum]
+note top of Object : In java, every class\nextends this one.
 
-[<start>st]->[<state>plunder]
-[plunder]->[<choice>more loot]
-[more loot]->[st]
-[more loot] no ->[<end>e]
+note "This is a floating note" as N1
+note "This note is connected\nto several objects." as N2
+Object .. N2
+N2 .. ArrayList
 
-[<actor>Sailor] - [<usecase>shiver me;timbers]
+class Foo
+note left: On last defined class
+
+@enduml
 </script>
 
-	<script src="js/lodash.min.js"></script>
-	<script src="js/skanaar.canvas.js"></script>
-	<script src="js/skanaar.svg.js"></script>
-	<script src="js/skanaar.util.js"></script>
-	<script src="js/skanaar.vector.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/codemirror.js"></script>
-
-
-
-	<script type="text/javascript" src="js/diagen.js"></script>
+	<script src="{% static 'js/lodash.min.js' %}"></script>
+	<script src="{% static 'js/codemirror.js' %}"></script>
+	<script src="{% static 'js/diagen.js' %}"></script>
 
 
 	</body>
