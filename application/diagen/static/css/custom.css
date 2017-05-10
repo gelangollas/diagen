@@ -49,7 +49,7 @@ img {
   height: 100%;
   border: 0;
   width: 100%;
-  padding: 22px 0 0 0;
+  padding: 30px 0 0 0;
   line-height: 25px;
   font-size: 16px;
   font-family: Consolas, Monaco, monospace;
@@ -80,10 +80,11 @@ img {
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 40px;
+	width: 36px;
 	height: 100%;
-	background: #eee8d5;
-	color:#D4CEBD
+	background: #f7f7f7;
+    border-right: 1px solid #ddd;
+	color:#D4CEBD;
 }
 #linenumbers.error {
 	background: rgba(220,50,47,0.2);

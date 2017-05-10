@@ -1,4 +1,6 @@
 from xml.dom import minidom
+from .TomitaOutputLeadParser import *
+from .Component import *
 
 class TomitaOutputParser:
     """TODO"""
@@ -60,73 +62,3 @@ class TomitaOutputParser:
             result += lead_terminals[term] + ' '
         
         return result
-
-
-######
-
-
-from html.parser import HTMLParser
-
-class TomitaOutputLeadParser(HTMLParser):        
-    
-    def __init__(self):
-        super(TomitaOutputLeadParser, self).__init__()
-        self.buffer = ''
-        self.need_to_catch = False
-        self.terminals = {}
-        self.fictitious_tag = True
-    
-    def handle_starttag(self, tag, attrs):
-        if tag == 'n' or tag == 'd' or tag == 't':
-            if self.fictitious_tag:
-                self.fictitious_tag = False
-                return
-            
-            self.need_to_catch = True
-            for attr in attrs:
-                if 'n' in attr[0]:
-                    self.buffer = attr[0]
-
-    def handle_endtag(self, tag):
-        pass
-
-    def handle_data(self, data):
-        if self.need_to_catch:
-            self.terminals[self.buffer] = data
-            self.need_to_catch = False
-            
-    def get_terminals(self, html_text):
-        self.feed(html_text)
-        return self.terminals
-
-
-#####
-
-
-class ExtractedComponent:
-    
-    def __init__(self):
-        self.text = ""
-        self.type = ""
-        self.name = ""
-        self.descr = ""
-        self.pointer = False
-        self.sentence_number = 0
-        self.first_word = 0
-        self.last_word = 0
-        self.text_pos = 0
-        self.length = 0
-    
-    def __str__(self):
-        return self.text
-
-
-
-
-
-#####
-
-parser = TomitaOutputParser('../tomita/output.xml')
-components = parser.get_components()
-for comp in components:
-    print(comp)

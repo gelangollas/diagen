@@ -4,7 +4,7 @@ $(function (){
 
   var storage = null
   var image = null
-  var defaultImageLink = "http://127.0.0.1:8000/static/diagrams/default.png";
+  var defaultImageLink = "http://127.0.0.1:8000/static/img/default.png";
   var imageLink = null;
   var jqCanvas = $('#canvas')
   var viewport = $(window)
@@ -35,6 +35,7 @@ $(function (){
 
   setCurrentText(defaultSource)
   setNewImage(defaultImageLink)
+  textForGenerate.value = 'модуль пользовательского окна. семантический модуль. модуль для рисования.'
 
   var editorElement = editor.getWrapperElement()
   window.addEventListener('resize', _.throttle(sourceChanged, 750, {leading: true}))
@@ -42,10 +43,10 @@ $(function (){
   canvasPanner.addEventListener('wheel', _.throttle(magnify, 50))
   generateButton.addEventListener('click', function(e) {
     modal.style.display = "block";
+    textForGenerate.focus();
   });
   modalCloseBtn.addEventListener('click', function(e) {
     modal.style.display = "none";
-    textForGenerate.value = "";
   });
 
   generateSubmitButton.addEventListener('click', function(e) {
@@ -56,7 +57,6 @@ $(function (){
   window.addEventListener('click', function(event) {
     if (event.target == modal) {
         modal.style.display = "none";
-        textForGenerate.value = "";
     }
   });
 
@@ -92,7 +92,7 @@ $(function (){
       cache: false,
       success: function(data){
         if(data.error){
-          alert('Произошла ошибка.');
+          alert('Произошла ошибка. \n' + data.message);
         }
         else {
           setNewImage(data.image_url);
@@ -133,16 +133,6 @@ $(function (){
     }
   }
 
-  diagen.saveViewModeToStorage = function (){
-    var question = 
-      'Do you want to overwrite the diagram in ' +
-      'localStorage with the currently viewed diagram?'
-    if (confirm(question)){
-      storage.moveToLocalStorage()
-      window.location = './'
-    }
-  }
-
   diagen.exitViewMode = function (){
     window.location = './'
   }
@@ -157,7 +147,7 @@ $(function (){
       success: function(data){
         loadAnimation.style.display = "none";
         if(data.error){
-          alert('Произошла ошибка.');
+          alert('Произошла ошибка.\n' + data.message);
         }
         else {
           setCurrentText(data.code);
@@ -170,16 +160,6 @@ $(function (){
   // Adapted from http://meyerweb.com/eric/tools/dencoder/
   function urlEncode(unencoded) {
     return encodeURIComponent(unencoded).replace(/'/g,'%27').replace(/"/g,'%22')
-  }
-
-  function getImageUrl(){
-    //TODO: send code to server and get answer
-
-    return "http://s.plantuml.com/imgp/16a-class-diagram-011.png"
-  }
-
-  function generateDiagramAndLoadImage(){
-    jQuery.ajax();
   }
 
   function urlDecode(encoded) {
