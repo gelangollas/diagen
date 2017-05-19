@@ -6,10 +6,14 @@ import "facttypes.proto";
 
 TAuxDicArticle "тип_компонента"
 {
-    key = {"модуль" gram="sg"},
-    key = {"класс" gram="sg"},
-    key = {"библиотека" gram="sg"},
-    key = {"функция" gram="sg"}
+    key = {"модуль"},
+    key = {"класс"},
+    key = {"библиотека"},
+    key = {"функция"},
+    key = {"алгоритм"},
+    key = {"программа"},    
+    key = {"файл"},
+    key = {"база"}
 }
 
 TAuxDicArticle "APRO"

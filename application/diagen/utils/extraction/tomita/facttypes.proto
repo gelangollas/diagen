@@ -3,9 +3,13 @@ import "facttypes_base.proto";
 
 message Component: NFactType.TFact 
 {
-	required string Type = 1;
+	optional string Type = 1 [ default = "default" ];
 	optional string Name = 2;
 	optional string Description = 3;
 	optional bool Pointer = 4;
 }
 
+message Buffer: NFactType.TFact 
+{
+	optional string Type = 1;
+}
