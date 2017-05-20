@@ -26,3 +26,4 @@ class ExtractedRelation:
 		self.type = ''
 		self.first_comp = None
 		self.second_comp = None
+

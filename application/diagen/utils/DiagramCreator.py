@@ -11,10 +11,10 @@ def build_diagram_from_code(code, path_to_builder='./diagen/utils/plantuml/', pa
 	f.close()
 
 	try:
-	    subprocess.check_output(['java', '-jar', path_to_builder + 'plantuml.jar', path_to_img+file_name+'.txt'], stderr=STDOUT)
+		subprocess.check_output(['java', '-jar', path_to_builder + 'plantuml.jar', path_to_img+file_name+'.txt'], stderr=STDOUT)
 	except subprocess.CalledProcessError as exc:
 		os.remove(path_to_img + file_name + '.txt')
-	    raise Exception(exc.output)
+		raise Exception(exc.output)
 
 	os.remove(path_to_img + file_name + '.txt')
 	return file_name+'.png'

@@ -3,7 +3,6 @@ from .TomitaOutputLeadParser import *
 from .Component import *
 
 class TomitaOutputParser:
-    """TODO"""
     
     def __init__(self, path):
         self.xmldoc = minidom.parse(path)
@@ -16,10 +15,10 @@ class TomitaOutputParser:
     
     def __construct_component(self, component_xml):
         to_construct = ExtractedComponent()
-        to_construct.type = self.__extract_component_element(component_xml, 'Type')
+        to_construct.type = self.__extract_component_element(component_xml, 'Type').lower()
         to_construct.name = self.__extract_component_element(component_xml, 'Name')
-        to_construct.descr = self.__extract_component_element(component_xml, 'Description')
-        to_construct.pointer = bool(self.__extract_component_element(component_xml, 'Pointer'))
+        to_construct.descr = self.__extract_component_element(component_xml, 'Description').lower()
+        to_construct.pointer = self._bool(self.__extract_component_element(component_xml, 'Pointer'))
         to_construct.sentence_number = int(self.__extract_component_attribute(component_xml, 'sn'))
         to_construct.first_word = int(self.__extract_component_attribute(component_xml, 'fw'))
         to_construct.last_word = int(self.__extract_component_attribute(component_xml, 'lw'))
@@ -27,7 +26,12 @@ class TomitaOutputParser:
         to_construct.length = int(self.__extract_component_attribute(component_xml, 'len'))
         to_construct.text = self.__extract_component_text(component_xml)
         return to_construct
-    
+
+    def _bool(self, str):
+        if str == 'true':
+            return True
+        return False
+
     def __extract_component_attribute(self, component_xml, attr_name):
         return component_xml.attributes[attr_name].value
     

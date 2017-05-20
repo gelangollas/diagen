@@ -1,3 +1,5 @@
+Этот модуль и тот модули.
+
 Главной программой объединяются следующие модули: Settings, View, Image Processor, 
 Worker, Contour Processor и Fractal Calculator.
 Модуль Settings отвечает за координирование работы настроек системы.
