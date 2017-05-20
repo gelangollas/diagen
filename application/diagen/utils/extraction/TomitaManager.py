@@ -2,7 +2,6 @@ import subprocess
 import os
 import codecs
 from .TomitaOutputParser import *
-from .ComponentComparer import *
 
 class TomitaManager:
 
@@ -48,18 +47,6 @@ class TomitaManager:
 
 		parser = TomitaOutputParser(self.session_files_base_path + '.xml')
 		components = parser.get_components()
-
-		'''comparer = ComponentComparer(components)
-		
-		n = len(components)
-		for i in  range(n):
-			print(str(i) + "	" + str(components[i]))
-
-		print('****************\n')
-		for i in range(n):
-			for j in range(n):
-				if i < j and comparer.equals(components[i], components[j]):
-					print("equals " + str(i) + " and " + str(j) )'''
 
 		if clear:
 			self._perform_clean()

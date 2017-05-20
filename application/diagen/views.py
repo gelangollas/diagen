@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from diagen.utils.DiagramCreator import build_diagram_from_code
-from diagen.utils.InformationExtractor import convert_text_to_code
+from diagen.utils.TextConverter import convert_text_to_code
 
 SERV_FULL_ADDRESS = 'http://127.0.0.1:8000/'
 

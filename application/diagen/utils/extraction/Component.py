@@ -18,7 +18,7 @@ class ExtractedComponent:
         return self.text
 
 
-class ExtractedRelation:
+class Relation:
 
 	def __init__(self):
 		self.descr = ''
@@ -27,3 +27,18 @@ class ExtractedRelation:
 		self.first_comp = None
 		self.second_comp = None
 
+
+class Component:
+
+    def __init__(self):
+        self.type = ""
+        self.name = ""
+        self.descr = ""
+        self.extracted_components = []
+
+    def __str__(self):
+        text = self.type + " " + self.descr
+        if len(self.name) > 0:
+            text += " (" + self.name + ")"
+
+        return text

@@ -2,8 +2,76 @@ from .Component import *
 import pymorphy2
 import re
 
+def cluster(extracted_components):
+	extr_comp = extracted_components
+	comparer = _ComponentComparer(extr_comp)
 
-class ComponentComparer:
+	# строим граф, где вершины - компоненты
+	# ребро между компонентами проводится, если компаратор посчитает компоненты тождественными
+	n = len(extr_comp)
+	to = [[] for _ in range(n)]
+
+	for i in range(n):
+		for j in range(i+1, n):
+			if comparer.equals(extr_comp[i], extr_comp[j]):
+				to[i].append(j)
+				to[j].append(i)
+
+	# обходим граф и помечаем каждую компоненту связности уникальным индексом
+	was = [-1]*n
+	set_id = 0
+	for i in range(n):
+		if was[i] == -1:
+			_dfs(i, set_id, was, to)
+			set_id += 1
+
+	# группируем компоненты связности по массивам
+	component_sets = [[] for _ in range(set_id)]
+	for i, c in enumerate(extr_comp):
+		idx = was[i]
+		component_sets[idx].append(c)
+
+	#получаем для каждого множества извлеченных компонентов один тождественный им всем
+	components = _build_components_from_sets(component_sets)
+	return components
+
+def _dfs(u, color, used, to):
+	if used[u] != -1:
+		return
+	used[u] = color
+
+	for v in to[u]:
+		_dfs(v, color, used, to)
+
+def _build_components_from_sets(sets):
+	components = []
+	for one_set in sets:
+		components.append(_build_component_from_set(one_set))
+
+	return components
+
+def _build_component_from_set(one_set):
+	comp = Component()
+	comp.extracted_components = one_set
+	comp.descr = " "
+
+	for c in one_set:
+		if c.pointer:
+			continue
+
+		if len(c.name) > 0:
+			comp.name = c.name
+
+		if len(c.type) > 0 and c.type != 'default':
+			comp.type = c.type
+
+		if len(c.descr) > len(comp.descr):
+			comp.descr = c.descr
+
+	return comp
+
+
+class _ComponentComparer:
 
 	def __init__(self, components):
 		self.cache = {}
@@ -31,7 +99,7 @@ class ComponentComparer:
 			result = True
 		
 		#сравнение по описанию компонентов
-		if not result and (not (c1.pointer and c2.pointer) and self._description_compare(c1, c2)):
+		if not result and not self._have_names(c1, c2) and (not (c1.pointer and c2.pointer) and self._description_compare(c1, c2)):
 			result = True
 		
 		if cache_result:
@@ -74,6 +142,9 @@ class ComponentComparer:
 		if c1.type != c2.type:
 			return False
 
+		if c1.descr == c2.descr:
+			return True
+
 		descr_words1 = set(re.findall(r"[\w']+", c1.descr))
 		descr_words2 = set(re.findall(r"[\w']+", c2.descr))
 
@@ -99,7 +170,3 @@ class ComponentComparer:
 		if len(descr_words2) - non_serv_words2 >= match*2:
 			return False
 		return True
-
-
-
-
