@@ -41,4 +41,10 @@ class Component:
         if len(self.name) > 0:
             text += " (" + self.name + ")"
 
+        #debug info
+        '''text += '\n'
+        for c in self.extracted_components:
+            text += str(c) + '\n'
+        print(text + '\n')'''
+
         return text

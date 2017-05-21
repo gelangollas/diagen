@@ -44,7 +44,7 @@ ComponentNoName -> ComponentCharacteristic ComponentDeclaration;
 Component -> ComponentNoName;
 
 //[компонент][название компонента на английском]
-Component -> ComponentDeclaration ComponentName interp (Component.Name);
+Component -> ComponentDeclaration ComponentName interp (Component.Name) (NamedComponentDescription interp (Component.Description));
 //[название компонента на английском]
 Component -> ComponentName interp (Component.Name);
 //[название компонента на английском][-][описание компонента]
@@ -53,7 +53,9 @@ Component -> ComponentName interp (Component.Name) (Delimiter) ComponentNoName;
 Component -> ComponentNoName (Delimiter) ComponentName interp (Component.Name);
 
 
-EnumeratedComponent -> Component | ComponentDescription interp (Component.Description) | ComponentName interp (Component.Name; Component.Description=" ");
+EnumeratedComponent -> Component;
+EnumeratedComponent -> ComponentDescription interp (Component.Description) (ComponentName interp (Component.Name));
+EnumeratedComponent -> ComponentName interp (Component.Name; Component.Description=" ");
 ComponentsEnumerationEnd -> Comma EnumeratedComponent | "и" EnumeratedComponent;
 ComponentsEnumerationPart -> Comma EnumeratedComponent;
 ComponentsEnumeration -> EnumeratedComponent ComponentsEnumerationPart* ComponentsEnumerationEnd;

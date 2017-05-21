@@ -5,3 +5,7 @@
 *.pyc
 *.pyo
 application/diagen/static/diagrams
+application/diagen/utils/extraction/tomita/input.txt
+application/diagen/utils/extraction/tomita/output.html
+application/diagen/utils/extraction/tomita/output.xml
+
