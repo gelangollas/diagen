@@ -3,6 +3,7 @@ import random
 import os
 import subprocess
 from subprocess import STDOUT
+import time
 
 def build_diagram_from_code(code, path_to_builder='./diagen/utils/plantuml/', path_to_img='./diagen/static/diagrams/'):
 	file_name = get_random_name()
@@ -11,7 +12,9 @@ def build_diagram_from_code(code, path_to_builder='./diagen/utils/plantuml/', pa
 	f.close()
 
 	try:
+		start_time = time.time()
 		subprocess.check_output(['java', '-jar', path_to_builder + 'plantuml.jar', path_to_img+file_name+'.txt'], stderr=STDOUT)
+		print("Build diagram --- %s seconds." % (time.time() - start_time))
 	except subprocess.CalledProcessError as exc:
 		os.remove(path_to_img + file_name + '.txt')
 		raise Exception(exc.output)

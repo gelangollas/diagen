@@ -1,7 +1,21 @@
 import subprocess
 import os
+import string
+import random
 import codecs
+from .ComponentsClusterizer import cluster
 from .TomitaOutputParser import *
+
+def extract_components(text):
+	session_name = _get_random_name()
+	tomita = TomitaManager(session_name)
+	extracted_components = tomita.run_tomita(text)
+	components = cluster(extracted_components)
+	return components
+
+def _get_random_name(n=17):
+	RANDOM_CHARS = string.ascii_letters + string.digits
+	return ''.join([random.choice(RANDOM_CHARS) for i in range(n)])
 
 class TomitaManager:
 
@@ -15,7 +29,7 @@ class TomitaManager:
 		CONFIG_TEMPLATE = '''encoding "utf8";
 		TTextMinerConfig {{ 
 			Dictionary = "dic.gzt";
-			NumThreads = 2;
+			NumThreads = 1;
 			Articles = [
 				{{ Name = "компоненты" }}
 			]

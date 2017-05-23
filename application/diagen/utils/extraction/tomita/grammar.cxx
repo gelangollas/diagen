@@ -44,7 +44,7 @@ ComponentNoName -> ComponentCharacteristic ComponentDeclaration;
 Component -> ComponentNoName;
 
 //[компонент][название компонента на английском]
-Component -> ComponentDeclaration ComponentName interp (Component.Name) (NamedComponentDescription interp (Component.Description));
+Component -> ComponentDeclaration ComponentName interp (Component.Name) (ComponentDescription interp (Component.Description));
 //[название компонента на английском]
 Component -> ComponentName interp (Component.Name);
 //[название компонента на английском][-][описание компонента]

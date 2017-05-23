@@ -1,49 +1,82 @@
-from diagen.utils.extraction.TomitaManager import *
-from diagen.utils.extraction.Component import *
-from diagen.utils.extraction.ComponentsClusterizer import cluster
+from diagen.utils.extraction.ComponentsExtractor import extract_components
+from diagen.utils.extraction.RelationsExtractor import extract_relations
 import string
 import random
+import time
+import re
 
 def convert_text_to_code(text):
-	components = _extract_components(text)
-	relations = _extract_relations(text, components)
+	components = extract_components(text)
+	start = time.time()
+	relations = extract_relations(text, components)
+	print("Extract relations ------ %s seconds" % (time.time()-start) )
 	code = _convert_components_to_code(components, relations)
 	return code
 
-def _extract_components(text):
-	session_name = _get_random_name()
-	tomita = TomitaManager(session_name)
-	extracted_components = tomita.run_tomita(text)
-	components = cluster(extracted_components)
-	return components
-
-def _extract_relations(text, components):
-	return []
-
-def _get_random_name(n=17):
-	RANDOM_CHARS = string.ascii_letters + string.digits
-	return ''.join([random.choice(RANDOM_CHARS) for i in range(n)])
-
 def _convert_components_to_code(components, relations):
 	endl = '\n'
+	aliases = ComponentAliasManager()
+
 	code = '@startuml' + endl
 
 	for component in components:
-		code += _convert_component_to_code(component) + endl
+		code += _convert_component_to_code(component)
+		code += ' as ' + aliases.get_alias(component) + endl
+		print(str(component) + '\n(' + component.name+')\n******' )
+		if len(component.name) != 0 and len(component.descr) > 1:
+			code += 'note right of ' + aliases.get_alias(component) + endl
+			code += component.type + ' ' + component.descr + endl
+			code += 'end note' + endl
 
 	code += endl
 
 	for relation in relations:
-		code += _convert_relation_to_code(relation)
+		code += aliases.get_alias(relation.first_comp) + ' --> '
+		code += aliases.get_alias(relation.second_comp) + ' : '
+		code += relation.descr + endl
 	code += endl + '@enduml'
 
 	return code
 
 def _convert_component_to_code(component):
-	return '[' + str(component) + ']'
+	text = '[' + str(component) + ']'
+	return text
 
 def _convert_relation_to_code(relation):
-	return ''
+	text = get_alias(relation.first_comp) + ']' + ' --> '
+	text += '[' + str(relation.second_comp) + '] :' + relation.descr
+	return text
+
+
+class ComponentAliasManager:
+
+	def __init__(self):
+		self.aliases = {}
+		self.counter = 0
+
+	def get_alias(self, component):
+		if self.aliases.get(component) == None:
+			self._build_alias(component)
+		return self.aliases[component]
+
+	def _build_alias(self, component):
+		result = ""
+		if len(component.name) > 0:
+			result = self._build_alias_from_name(component.name)
+		else:
+			result = self._build_common_alias()
+		self.aliases[component] = result
+
+	def _build_alias_from_name(self, name):
+		words = re.findall(r"[\w]+", name)
+		res = ''
+		for word in words:
+			res += word.title()
+		return res
+
+	def _build_common_alias(self):
+		self.counter += 1
+		return 'Alias' + str(self.counter)
 
 if __name__ == '__main__':
 	sample = 'модуль пользовательского окна. семантический модуль. модуль для рисования.'

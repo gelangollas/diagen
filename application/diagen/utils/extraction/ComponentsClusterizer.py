@@ -31,7 +31,7 @@ def cluster(extracted_components):
 		idx = was[i]
 		component_sets[idx].append(c)
 
-	#получаем для каждого множества извлеченных компонентов один тождественный им всем
+	# получаем для каждого множества извлеченных компонентов один тождественный им всем
 	components = _build_components_from_sets(component_sets)
 	return components
 
@@ -46,18 +46,24 @@ def _dfs(u, color, used, to):
 def _build_components_from_sets(sets):
 	components = []
 	for one_set in sets:
-		components.append(_build_component_from_set(one_set))
+		built, res = _try_build_component_from_set(one_set)
+		if built:
+			components.append(res)
 
 	return components
 
-def _build_component_from_set(one_set):
+def _try_build_component_from_set(one_set):
 	comp = Component()
 	comp.extracted_components = one_set
 	comp.descr = " "
+	valid = False
 
 	for c in one_set:
 		if c.pointer:
 			continue
+
+		valid = True
+		c.prototype = comp
 
 		if len(c.name) > 0:
 			comp.name = c.name
@@ -68,7 +74,7 @@ def _build_component_from_set(one_set):
 		if len(c.descr) > len(comp.descr):
 			comp.descr = c.descr
 
-	return comp
+	return valid, comp
 
 
 class _ComponentComparer:
@@ -125,6 +131,7 @@ class _ComponentComparer:
 
 		i1, i2 = self.components_index[c1], self.components_index[c2]
 		i = i2-1
+
 		while i > i1:
 			if self.components[i].type == c2.type:
 				return False
@@ -167,6 +174,6 @@ class _ComponentComparer:
 			if self._is_service_part_of_speech(word):
 				non_serv_words2 += 1
 
-		if len(descr_words2) - non_serv_words2 >= match*2:
+		if len(descr_words2) - non_serv_words2 > match*2:
 			return False
 		return True

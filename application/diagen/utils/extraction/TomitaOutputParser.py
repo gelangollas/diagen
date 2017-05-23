@@ -12,6 +12,19 @@ class TomitaOutputParser:
         for comp in self.xmldoc.getElementsByTagName('Component'):
             components.append(self.__construct_component(comp))
         return components
+
+    def get_sentences(self):
+        leads = self.xmldoc.getElementsByTagName('Lead')
+        sentences = []
+
+        html_parser = TomitaOutputLeadParser()
+        for lead in leads:
+            html_text = self.__extract_component_attribute(lead, 'text')
+            sentences.append(html_parser.get_text(html_text))
+
+        return sentences
+
+
     
     def __construct_component(self, component_xml):
         to_construct = ExtractedComponent()
@@ -19,6 +32,7 @@ class TomitaOutputParser:
         to_construct.name = self.__extract_component_element(component_xml, 'Name')
         to_construct.descr = self.__extract_component_element(component_xml, 'Description').lower()
         to_construct.pointer = self._bool(self.__extract_component_element(component_xml, 'Pointer'))
+        to_construct.sentence_id = int(self.__extract_component_attribute(component_xml, 'LeadID'))
         to_construct.sentence_number = int(self.__extract_component_attribute(component_xml, 'sn'))
         to_construct.first_word = int(self.__extract_component_attribute(component_xml, 'fw'))
         to_construct.last_word = int(self.__extract_component_attribute(component_xml, 'lw'))
@@ -27,8 +41,8 @@ class TomitaOutputParser:
         to_construct.text = self.__extract_component_text(component_xml)
         return to_construct
 
-    def _bool(self, str):
-        if str == 'true':
+    def _bool(self, string):
+        if string != '0':
             return True
         return False
 
