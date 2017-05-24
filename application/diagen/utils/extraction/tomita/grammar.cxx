@@ -9,8 +9,10 @@ ComponentPointer -> Word<gram="APRO"> | Word<kwtype="APRO">;
 
 //ключевое слово - тип компонента
 ComponentDeclaration -> Word<kwtype="тип_компонента", gram="sg"> interp (Component.Type);
+ComponentDeclaration -> Word<kwtype="тип_компонента_пользователя", gram="sg"> interp (Component.Type);
 //ключевое слово - тип компонента во множественном числе
 ComponentDeclarationPlural -> Word<kwtype="тип_компонента", gram="pl"> interp (Component.Type);
+ComponentDeclarationPlural -> Word<kwtype="тип_компонента_пользователя", gram="pl"> interp (Component.Type);
 
 //слова, которые не склоняются и разделители
 ServicePartsOfSpeech -> Word<gram="PART"> | Word<gram="PR"> | Word<gram="CONJ"> | Word<gram="INTJ">;
@@ -27,8 +29,7 @@ ComponentDescription -> Word<gram="partcp,V"> DescriptionWord2* DescriptionWord2
 //характеристика компонента
 ComponentCharacteristic -> Adj<gram="sg"> interp (Component.Description);
 
-ComponentName -> AnyWord<lat, h-reg1>+ | AnyWord<h-reg2>;
-
+ComponentName -> AnyWord<lat, h-reg1>+ | AnyWord<h-reg2> | AnyWord<kwtype="компонент_пользователя"> {weight = 2};
 
 /*
 Далее идут шаблоны для описания компонентов 
@@ -61,5 +62,7 @@ ComponentsEnumerationPart -> Comma EnumeratedComponent;
 ComponentsEnumeration -> EnumeratedComponent ComponentsEnumerationPart* ComponentsEnumerationEnd;
 Components -> ComponentDeclarationPlural (Hyphen) (Colon) ComponentsEnumeration;
 
+//один компонент
 S -> Component;
+//перечисление нескольких компонентов
 S -> Components;

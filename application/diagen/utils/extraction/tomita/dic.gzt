@@ -7,6 +7,7 @@ import "facttypes.proto";
 TAuxDicArticle "тип_компонента"
 {
     key = {"модуль"},
+    key = {"компонент"},
     key = {"класс"},
     key = {"библиотека"},
     key = {"функция"},
@@ -14,6 +15,16 @@ TAuxDicArticle "тип_компонента"
     key = {"программа"},    
     key = {"файл"},
     key = {"база"}
+}
+
+TAuxDicArticle "тип_компонента_пользователя"
+{
+
+}
+
+TAuxDicArticle "компонент_пользователя"
+{
+    key = {"Data Tools Platform 1.6"}
 }
 
 TAuxDicArticle "APRO"

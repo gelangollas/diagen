@@ -32,7 +32,6 @@ class Relation:
         text += '\n    '+str(self.second_comp) + '\n with description: ' + self.descr
         return text
 
-
 class Component:
 
     def __init__(self):
@@ -42,8 +41,10 @@ class Component:
         self.extracted_components = []
 
     def __str__(self):
-        if len(self.name) > 0:
+        if len(self.name) > 0 and len(self.type) > 0:
             text = self.type + " " + self.name
+        elif len(self.name) > 0:
+            text = self.name
         else:
             text = self.type + " " + self.descr
 

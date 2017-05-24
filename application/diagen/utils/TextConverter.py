@@ -22,7 +22,6 @@ def _convert_components_to_code(components, relations):
 	for component in components:
 		code += _convert_component_to_code(component)
 		code += ' as ' + aliases.get_alias(component) + endl
-		print(str(component) + '\n(' + component.name+')\n******' )
 		if len(component.name) != 0 and len(component.descr) > 1:
 			code += 'note right of ' + aliases.get_alias(component) + endl
 			code += component.type + ' ' + component.descr + endl

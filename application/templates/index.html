@@ -152,18 +152,34 @@
     
 
 <script type="text" id="defaultGraph">@startuml
-class Object << general >>
-Object <|--- ArrayList
+[модуль SETTINGS] as Settings
+[модуль VIEW] as View
+[модуль IMAGE PROCESSOR] as ImageProcessor
+[модуль WORKER] as Worker
+[модуль CONTOUR PROCESSOR] as ContourProcessor
+[модуль FRACTAL CALCULATOR] as FractalCalculator
+[ПРОГРАММА] as Программа
+[модуль BINARIZER] as Binarizer
+[модуль MORPHOLOGY PROCESSOR] as MorphologyProcessor
+[модуль CONTOUR SEARCHER] as ContourSearcher
+[модуль CONTOUR ENHANCER] as ContourEnhancer
+[модуль BOX COUNTER] as BoxCounter
+[модуль LEAST SQUARES CALCULATOR] as LeastSquaresCalculator
+[алгоритм BOX COUNTING] as BoxCounting
 
-note top of Object : In java, every class\nextends this one.
-
-note "This is a floating note" as N1
-note "This note is connected\nto several objects." as N2
-Object .. N2
-N2 .. ArrayList
-
-class Foo
-note left: On last defined class
+Программа --> Settings : объединяются
+Программа --> View : объединяются
+Программа --> ImageProcessor : объединяются
+ImageProcessor --> Binarizer : включает
+ImageProcessor --> MorphologyProcessor : включает
+Программа --> Worker : объединяются
+Программа --> ContourProcessor : объединяются
+ContourProcessor --> ContourSearcher : объединяет
+ContourProcessor --> ContourEnhancer : объединяет
+Программа --> FractalCalculator : объединяются
+FractalCalculator --> BoxCounter : является
+FractalCalculator --> LeastSquaresCalculator : является
+BoxCounter --> BoxCounting : отвечает
 
 @enduml
 </script>

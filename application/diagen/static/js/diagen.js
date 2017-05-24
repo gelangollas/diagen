@@ -35,7 +35,7 @@ $(function (){
 
   setCurrentText(defaultSource)
   setNewImage(defaultImageLink)
-  textForGenerate.value = 'модуль пользовательского окна. семантический модуль. модуль для рисования.'
+  textForGenerate.value = ''
 
   var editorElement = editor.getWrapperElement()
   window.addEventListener('resize', _.throttle(sourceChanged, 750, {leading: true}))
