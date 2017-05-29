@@ -2,6 +2,7 @@
 *.bin
 *\__pycache__
 
+*\migrations
 *.pyc
 *.pyo
 application/diagen/static/diagrams

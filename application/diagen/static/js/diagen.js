@@ -11,19 +11,31 @@ $(function (){
   var jqBody = $('body')
   var lineNumbers = $('#linenumbers')
   var lineMarker = $('#linemarker')
-  var modal = document.getElementById('modal');
+  var accountContent = document.getElementById('account-content');
+  var modal = document.getElementById('generate-modal');
+  var loginModal = document.getElementById('login-modal');
+  var accountModal = document.getElementById('account-modal');
+  var registrationModal = document.getElementById('registration-modal');
   var loadAnimation = document.getElementById('load-animation');
   var refreshImageButton = document.getElementById("refreshimage");
   var generateButton = document.getElementById("generatebutton");
+  var loginButton = document.getElementById("login-button");
+  var registrationBeginButton = document.getElementById("registration-begin-button");
+  var registrationButton = document.getElementById("registration-submit");
+  var accountButton = document.getElementById("account");
+  var settingsToggler = document.getElementById("settingstoggle");
   var generateSubmitButton = document.getElementById("generatesubmit");
   var modalCloseBtn = document.getElementById("closebybtn");
   var imgLink = document.getElementById('savebutton')
   var textarea = document.getElementById('textarea')
   var canvasElement = document.getElementById('canvas')
+  var generateSettingsBlock = document.getElementById('generatesettings')
   var canvasPanner = document.getElementById('canvas-panner')
   var canvasTools = document.getElementById('canvas-tools')
   var defaultSource = document.getElementById('defaultGraph').innerHTML
   var textForGenerate = document.getElementById('generatetext')
+  var componentTypes = document.getElementById('componenttypes')
+  var componentNames = document.getElementById('componentnames')
   var zoomLevel = 0
   var offset = {x:0, y:0}
 
@@ -33,6 +45,11 @@ $(function (){
     keyMap: 'sublime'
   });
 
+  document.getElementById('about').style.width = (document.getElementById('tools').offsetWidth+50).toString() + "px"
+
+  canvasPanner.addEventListener('mouseenter', classToggler(jqBody, 'canvas-mode', true))
+  canvasPanner.addEventListener('mouseleave', classToggler(jqBody, 'canvas-mode', false))
+
   setCurrentText(defaultSource)
   setNewImage(defaultImageLink)
   textForGenerate.value = ''
@@ -41,22 +58,47 @@ $(function (){
   window.addEventListener('resize', _.throttle(sourceChanged, 750, {leading: true}))
   editor.on('changes', _.debounce(sourceChanged, 300))
   canvasPanner.addEventListener('wheel', _.throttle(magnify, 50))
+
+  accountButton.addEventListener('click', function(e) {
+    loadUserData();
+  });
   generateButton.addEventListener('click', function(e) {
     modal.style.display = "block";
     textForGenerate.focus();
   });
+  loginButton.addEventListener('click', function(e) {
+    loadAnimation.style.display = "block";
+    loginModal.style.display = "none";
+    autentificateUser();
+  });
+  registrationBeginButton.addEventListener('click', function(e) {
+    loginModal.style.display = "none";
+    registrationModal.style.display = "block";
+  });
+  registrationButton.addEventListener('click', function(e) {
+    if(checkUserData()){
+      performRegistration();
+    }
+  });
   modalCloseBtn.addEventListener('click', function(e) {
     modal.style.display = "none";
   });
-
+  settingsToggler.addEventListener('click', function(e) {
+    if (generateSettingsBlock.style.display === 'none') {
+        generateSettingsBlock.style.display = 'block';
+    } else {
+        generateSettingsBlock.style.display = 'none';
+    }
+  });
   generateSubmitButton.addEventListener('click', function(e) {
     modal.style.display = "none";
     loadAnimation.style.display = "block";
     performGenerateDiagram();
   });
   window.addEventListener('click', function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+    var tg = event.target
+    if (tg == modal || tg == loginModal || tg == registrationModal || tg == accountModal) {
+        tg.style.display = "none";
     }
   });
 
@@ -101,6 +143,93 @@ $(function (){
     });
   }
 
+  function loadUserData(){
+    loadAnimation.style.display = "block";
+    jQuery.ajax({
+      url: '/load_user_data',
+      type: 'POST',
+      cache: false,
+      success: function(data){
+        loadAnimation.style.display = "none";
+        if(data.is_autentificated){
+          showUserData(data);
+        }
+        else {
+          loginModal.style.display = "block";
+        }
+      }
+    });
+  }
+
+  function performRegistration(){
+    registrationModal.style.display = "none";
+    loadAnimation.style.display = "block";
+
+    username = document.getElementById("reg-user-name").value
+    password = document.getElementById("reg-pass-text").value
+
+    jQuery.ajax({
+      url: registrationButton.getAttribute("url"),
+      type: 'POST',
+      data: {"username": username, "password": password},
+      dataType: "json",
+      cache: false,
+      success: function(data){
+        loadAnimation.style.display = "none";
+        if(data.error){
+          alert(data.error_message);
+          registrationModal.style.display = "block";
+        }
+        else {
+          alert('Регистрация успешно завершена, теперь вы можете войти в созданный аккаунт.');
+          loginModal.style.display = "block";
+        }
+      }
+    });
+  }
+
+  function checkUserData(){
+    username = document.getElementById("reg-user-name").value
+    password = document.getElementById("reg-pass-text").value
+    password_repeat = document.getElementById("reg-pass-text-repeat").value
+    if(username.length == 0 || password.length == 0){
+      alert("Заполните все поля!")
+    }
+    else if(!(password === password_repeat)){
+      alert("Пароли не совпадают.")
+    }
+    else 
+      return true;
+    return false;
+  }
+
+  function showUserData(data){
+    accountContent.innerHTML = data.html_text;
+    accountModal.style.display = "block";
+  }
+
+  function autentificateUser(){
+    username = document.getElementById("logintext").value
+    password = document.getElementById("passtext").value
+    jQuery.ajax({
+      url: loginButton.getAttribute("data-url"),
+      type: 'POST',
+      data: {"username": username, "password": password},
+      dataType: "json",
+      cache: false,
+      success: function(data){
+        loadAnimation.style.display = "none";
+        if(data.error){
+          alert('Произошла ошибка. \n' + data.error_message);
+          loginModal.style.display = "block";
+        }
+        else {
+          alert('Вы вошли в аккаунт '+username+'.' );
+        }
+      }
+    });
+  }
+
   function setNewImage(newImageUrl){
     img = new Image();
     img.addEventListener("load", function(){
@@ -111,6 +240,76 @@ $(function (){
     img.src = imageLink;
   }
 
+  diagen.saveCurrentDiagram = function(){
+    accountModal.style.display = "none";
+    loadAnimation.style.display = "block";
+
+    title = document.getElementById('diagram-title').value
+    jQuery.ajax({
+      url: document.getElementById('diagram-save').getAttribute("url"),
+      type: 'POST',
+      data: {"code": currentText(), "title": title},
+      dataType: "json",
+      cache: false,
+      success: function(data){
+        loadAnimation.style.display = "none";
+        if(data.error){
+          alert(data.error_message);
+          accountModal.style.display = "block";
+        }
+        else {
+          alert(data.message);
+        }
+      }
+    });
+  }
+
+  diagen.loadDiagramWithId = function(pk){
+    accountModal.style.display = "none";
+    loadAnimation.style.display = "block";
+
+    jQuery.ajax({
+        url: '/load_user_diagram',
+        type: 'POST',
+        data: {"pk": pk},
+        dataType: "json",
+        cache: false,
+        success: function(data){
+          loadAnimation.style.display = "none";
+          if(data.error){
+            alert(data.error_message);
+          }
+          else {
+            setCurrentText(data.code)
+            setNewImage(data.url)
+          }
+        }
+      });
+  }
+
+  diagen.deleteDiagram = function(pk){
+    if (confirm('Вы действительно хотити удалить эту диаграмму?')){
+      accountModal.style.display = "none";
+      loadAnimation.style.display = "block";
+      jQuery.ajax({
+        url: '/delete_user_diagram',
+        type: 'POST',
+        data: {"pk": pk},
+        dataType: "json",
+        cache: false,
+        success: function(data){
+          loadAnimation.style.display = "none";
+          if(data.error){
+            alert(data.error_message);
+          }
+          else {
+            loadUserData();
+          }
+        }
+      });
+    }
+  }
+
   diagen.resetViewport = function (){
     zoomLevel = 0
     offset = {x: 0, y: 0}
@@ -118,10 +317,6 @@ $(function (){
   }
 
   diagen.toggleSidebar = function (id){
-    var sidebars = ['reference', 'about']
-    _.each(sidebars, function (key){
-      if (id !== key) $(document.getElementById(key)).toggleClass('visible', false)
-    })
     $(document.getElementById(id)).toggleClass('visible')
   }
 
@@ -141,7 +336,11 @@ $(function (){
     jQuery.ajax({
       url: generateSubmitButton.getAttribute("data-url"),
       type: 'POST',
-      data: {"text": textForGenerate.value},
+      data: {
+        "text": textForGenerate.value, 
+        "component_types": componentTypes.value,
+        "component_names": componentNames.value
+      },
       dataType: "json",
       cache: false,
       success: function(data){
@@ -156,21 +355,6 @@ $(function (){
       }
     });
   }
-
-  // Adapted from http://meyerweb.com/eric/tools/dencoder/
-  function urlEncode(unencoded) {
-    return encodeURIComponent(unencoded).replace(/'/g,'%27').replace(/"/g,'%22')
-  }
-
-  function urlDecode(encoded) {
-    return decodeURIComponent(encoded.replace(/\+/g, ' '))
-  }
-
-  function setShareableLink(str){
-    var base = '#view/'
-    linkLink.href = base + urlEncode(str)
-  }
-
 
   function initImageDownloadLink(link, canvasElement){
     link.addEventListener('click', downloadImage, false);

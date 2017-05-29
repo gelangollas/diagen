@@ -9,10 +9,8 @@ ComponentPointer -> Word<gram="APRO"> | Word<kwtype="APRO">;
 
 //ключевое слово - тип компонента
 ComponentDeclaration -> Word<kwtype="тип_компонента", gram="sg"> interp (Component.Type);
-ComponentDeclaration -> Word<kwtype="тип_компонента_пользователя", gram="sg"> interp (Component.Type);
 //ключевое слово - тип компонента во множественном числе
 ComponentDeclarationPlural -> Word<kwtype="тип_компонента", gram="pl"> interp (Component.Type);
-ComponentDeclarationPlural -> Word<kwtype="тип_компонента_пользователя", gram="pl"> interp (Component.Type);
 
 //слова, которые не склоняются и разделители
 ServicePartsOfSpeech -> Word<gram="PART"> | Word<gram="PR"> | Word<gram="CONJ"> | Word<gram="INTJ">;

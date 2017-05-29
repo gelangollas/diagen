@@ -2,15 +2,13 @@ from diagen.utils.extraction.ComponentsExtractor import extract_components
 from diagen.utils.extraction.RelationsExtractor import extract_relations
 import string
 import random
-import time
 import re
 
-def convert_text_to_code(text):
-	components = extract_components(text)
-	start = time.time()
+def convert_text_to_code(text, component_types, component_names):
+	components = extract_components(text, component_types, component_names)
 	relations = extract_relations(text, components)
-	print("Extract relations ------ %s seconds" % (time.time()-start) )
 	code = _convert_components_to_code(components, relations)
+	print('*********')
 	return code
 
 def _convert_components_to_code(components, relations):
@@ -20,6 +18,7 @@ def _convert_components_to_code(components, relations):
 	code = '@startuml' + endl
 
 	for component in components:
+		print(str(component))
 		code += _convert_component_to_code(component)
 		code += ' as ' + aliases.get_alias(component) + endl
 		if len(component.name) != 0 and len(component.descr) > 1:
@@ -30,6 +29,7 @@ def _convert_components_to_code(components, relations):
 	code += endl
 
 	for relation in relations:
+		print(relation)
 		code += aliases.get_alias(relation.first_comp) + ' --> '
 		code += aliases.get_alias(relation.second_comp) + ' : '
 		code += relation.descr + endl

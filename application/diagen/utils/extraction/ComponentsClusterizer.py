@@ -59,11 +59,12 @@ def _try_build_component_from_set(one_set):
 	valid = False
 
 	for c in one_set:
+		c.prototype = comp
+		
 		if c.pointer:
 			continue
 
 		valid = True
-		c.prototype = comp
 
 		if len(c.name) > 0:
 			comp.name = c.name

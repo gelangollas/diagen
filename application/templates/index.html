@@ -13,7 +13,7 @@
 		<link href="{% static 'css/custom.css' %}" rel="stylesheet">
 		<link href="{% static 'css/load-animation.css' %}" rel="stylesheet">
 
-		<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+		<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
 
 	</head>
 
@@ -76,23 +76,26 @@
 		</div>
 
 	<div id="linemarker"></div>
-    <div class="tools">
-			<a class="logo" href="javascript:void(0)" onclick="diagen.toggleSidebar(&#39;about&#39;)" title="Об DiaGen"><h1>DiaGen</h1> &nbsp;</a>
-			<a href="javascript:void(0)" onclick="diagen.toggleSidebar(&#39;about&#39;)" title="Об DiaGen">
+    <div id="tools" class="tools">
+			<a class="logo pretty-button" href="javascript:void(0)" onclick="diagen.toggleSidebar(&#39;about&#39;)" title="Об DiaGen"><h1>DiaGen</h1> &nbsp;</a>
+			<a href="javascript:void(0)" onclick="diagen.toggleSidebar(&#39;about&#39;)" class="pretty-button" title="Об DiaGen">
 				<img src="{% static 'img/info.png' %}">
 			</a>
-			<a href="http://translate.plantuml.com/ru/PlantUML_Language_Reference_Guide_RU.pdf" title="Справка о языке">
+			<a id="account" title="Личные данные" class="pretty-button">
+				<img src="{% static 'img/account.png' %}">
+			</a>
+			<a href="http://translate.plantuml.com/ru/PlantUML_Language_Reference_Guide_RU.pdf" class="pretty-button" title="Справка о языке">
 				<img src="{% static 'img/book.png' %}">
 			</a>
-			<a id="savebutton" href="javascript:void(0)" download="diagram.png" title="Сохранить диаграмму">
+			<a id="savebutton" class="pretty-button" href="javascript:void(0)" download="diagram.png" title="Скачать диаграмму">
 				<img src="{% static 'img/export.png' %}">
 			</a>
 
-			<a id="generatebutton" title="Сгенерировать диаграмму из текста">
+			<a id="generatebutton" class="pretty-button" title="Сгенерировать диаграмму из текста">
 				<img src="{% static 'img/generate.png' %}">
 			</a>
 
-			<a href="javascript:diagen.discardCurrentGraph()" title="Удалить эту диаграмму">
+			<a href="javascript:diagen.discardCurrentGraph()" class="pretty-button" title="Удалить эту диаграмму">
 				<img src="{% static 'img/delete.png' %}">
 			</a>
 
@@ -101,35 +104,89 @@
 			<span id="tooltip"></span>
 
 			<div class="canvas-tools" id="canvas-tools">
-				<a id="refreshimage" href="javascript:diagen.refreshImage()" data-url="{% url 'get_diagram' %}" title="Обновить изображение">
+				<a id="refreshimage" class="pretty-button" href="javascript:diagen.refreshImage()" data-url="{% url 'get_diagram' %}" title="Обновить изображение">
 					<img src="{% static 'img/refresh.png' %}">
 				</a>
-				<a href="javascript:diagen.magnifyViewport(2)" title="Увеличить изображение">
+				<a href="javascript:diagen.magnifyViewport(2)" class="pretty-button" title="Увеличить изображение">
 					<img src="{% static 'img/plus.png' %}">
 				</a>
-				<a href="javascript:diagen.resetViewport()" title="Восстановить масштаб изображения">
+				<a href="javascript:diagen.resetViewport()" class="pretty-button" title="Восстановить масштаб изображения">
 					<img src="{% static 'img/revert.png' %}">
 				</a>
-				<a href="javascript:diagen.magnifyViewport(-2)" title="Уменьшить изображение">
+				<a href="javascript:diagen.magnifyViewport(-2)" class="pretty-button" title="Уменьшить изображение">
 					<img src="{% static 'img/minus.png' %}">
 				</a>
 			</div>
 	</div>
 
-	<div id="modal" class="modal">
+	<div id="generate-modal" class="modal">
 
 	  <!-- Modal content -->
-	  <div class="modal-content">
+	  <div class="modal-generate-content">
 	    <p>Вставьте текст, который является описанием программы, в поле снизу.</p>
 
 	    <hr color="#cccccc" size="1">
-	    <textarea name="generatetext" id="generatetext" rows="10" class="gentext"></textarea>
+	    <textarea name="generatetext" id="generatetext" rows="20" class="gentext"></textarea>
 	    <div align="right">
-		    <a class="button" id="generatesubmit" data-url="{% url 'generate_diagram' %}">Сгенерировать</a>
-		    <a class="button" id="closebybtn">Отмена</a>
+	    	<a class="button pretty-button" id="settingstoggle">Настройки</a>
+		    <a class="button pretty-button" id="generatesubmit" data-url="{% url 'generate_diagram' %}">Сгенерировать</a>
+		    <a class="button pretty-button" id="closebybtn">Отмена</a>
+	    </div>
+
+	    <div id="generatesettings" style="display: none;">
+	    	<p>Настройки генерации.</p>
+	    	<hr color="#cccccc" size="1">
+	    	<p>Типы извлекаемых компонентов (по одному в строке).</p>
+	    	<textarea name="componenttypes" id="componenttypes" rows="10" class="gentext">{{components}}</textarea>
+	    	<p>Названия известных компонентов (по одному в строке, без знаков препинания).</p>
+	    	<textarea name="componentnames" id="componentnames" rows="10" class="gentext"></textarea>
+
 	    </div>
 	  </div>
 
+	</div>
+
+	<div id="login-modal" class="modal">
+		<div class="modal-login-content">
+		<h2 style="font-weight: 300;">Авторизация</h2>
+		<hr color="#cccccc" size="1">
+
+			<label><b>Имя пользователя</b></label>
+			<input id="logintext" type="text" required class="inputtext">
+			<label><b>Пароль</b></label>
+			<input id="passtext" type="password" required class="inputtext">
+
+	    	<a id="login-button" class="button pretty-button wide-button" style="background-color: #4CAF50; border: 0px;" data-url="{% url 'autentificate_user' %}">
+	    		Войти
+    		</a>
+			<a id="registration-begin-button" class="button pretty-button wide-button">Регистрация</a>
+		</div>	
+	</div>
+
+	<div id="registration-modal" class="modal">
+		<div class="modal-login-content">
+		<h2 style="font-weight: 300;">Регистрация</h2>
+		<hr color="#cccccc" size="1">
+
+			<label><b>Имя пользователя</b></label>
+			<input id="reg-user-name" type="text" required class="inputtext">
+			<label><b>Пароль</b></label>
+			<input id="reg-pass-text" type="password" required class="inputtext">
+			<label><b>Подтвердите пароль</b></label>
+			<input id="reg-pass-text-repeat" type="password" required class="inputtext">
+
+			<a id="registration-submit" 
+				class="button pretty-button wide-button" 
+				style="background-color: #4CAF50; border: 0px;"
+				url="{% url 'registrate_user' %}">
+				Зарегистрироваться
+			</a>
+		</div>	
+	</div>
+
+	<div id="account-modal" class="modal">
+		<div id="account-content" class="modal-generate-content">
+		</div>
 	</div>
 
 

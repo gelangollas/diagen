@@ -6,10 +6,10 @@ import codecs
 from .ComponentsClusterizer import cluster
 from .TomitaOutputParser import *
 
-def extract_components(text):
+def extract_components(text, component_types, component_names):
 	session_name = _get_random_name()
 	tomita = TomitaManager(session_name)
-	extracted_components = tomita.run_tomita(text)
+	extracted_components = tomita.run_tomita(text, component_types, component_names)
 	components = cluster(extracted_components)
 	return components
 
@@ -17,17 +17,17 @@ def _get_random_name(n=17):
 	RANDOM_CHARS = string.ascii_letters + string.digits
 	return ''.join([random.choice(RANDOM_CHARS) for i in range(n)])
 
-class TomitaManager:
+DEFAULT_COMPONENTS = [
+	'модуль',
+	'компонент',
+	'класс',
+	'библиотека',
+	'функция',
+	'алгоритм',
+	'файл'
+]
 
-	DEFAULT_COMPONENTS = [
-		'модуль',
-		'компонент',
-		'класс',
-		'библиотека',
-		'функция',
-		'алгоритм',
-		'файл'
-	]
+class TomitaManager:
 
 	def __init__(self, session_name='default', path_to_tomita='./diagen/utils/extraction/tomita/'):
 		self.session_name = session_name
@@ -57,7 +57,7 @@ class TomitaManager:
 		config = CONFIG_TEMPLATE.format(self.session_name + '.gzt', self.session_name + '.txt', self.session_name + '.xml')
 		return config
 
-	def _build_gzt(self, component_types, user_component_types, user_components):
+	def _build_gzt(self, component_types, user_components):
 		GZT_TEMPLATE = '''encoding "utf8";
 		import "base.proto";
 		import "articles_base.proto";
@@ -66,13 +66,9 @@ class TomitaManager:
 		{{
 			{0}
 		}}
-		TAuxDicArticle "тип_компонента_пользователя"
-		{{
-			{1}
-		}}
 		TAuxDicArticle "компонент_пользователя"
 		{{
-			{2}
+			{1}
 		}}
 		TAuxDicArticle "APRO"
 		{{
@@ -84,9 +80,8 @@ class TomitaManager:
 		}}
 		'''
 		component_types = self._format_to_dict_keys(component_types)
-		user_component_types = self._format_to_dict_keys(user_component_types)
 		user_components = self._format_to_dict_keys(user_components)
-		gzt = GZT_TEMPLATE.format(component_types, user_component_types, user_components)
+		gzt = GZT_TEMPLATE.format(component_types, user_components)
 		return gzt
 
 	def _format_to_dict_keys(self, keys):
@@ -101,18 +96,23 @@ class TomitaManager:
 			res += KEY_TEMPLATE.format(keys[n-1])
 		return res
 
-	def run_tomita(self, text, clear=True, component_types=DEFAULT_COMPONENTS, user_component_types=[], user_components=['программа']):
+	def run_tomita(self, text, component_types=DEFAULT_COMPONENTS, user_components=[], clear=True):
 		f = codecs.open(self.session_files_base_path + '.txt', 'w', 'utf-8')
 		f.write(text)
 		f.close()
 
+		print(component_types)
+		print(user_components)
+
 		f = codecs.open(self.session_files_base_path + '.gzt', 'w', 'utf-8')
-		f.write(self._build_gzt(component_types, user_component_types, user_components))
+		f.write(self._build_gzt(component_types, user_components))
 		f.close()
 
 		f = codecs.open(self.session_files_base_path + '.proto', 'w', 'utf-8')
 		f.write(self.tomita_config)
 		f.close()
+
+
 		
 		subprocess.Popen([self.path_to_tomita + '\\' + 'tomitaparser.exe', 
 			self.session_name + '.proto'], cwd=self.path_to_tomita).wait()

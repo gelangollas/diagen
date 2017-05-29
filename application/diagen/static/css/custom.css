@@ -16,7 +16,11 @@ img {
     vertical-align: middle;
     border: 0;
 }
-
+a:-webkit-any-link {
+    color: -webkit-link;
+    cursor: auto;
+    text-decoration: none;
+}
 
 .wrap {
 	height: 100%;
@@ -93,16 +97,25 @@ img {
 #canvas {
 	position: absolute;
 }
-a, a:active {
+
+
+.pretty-button{
 	color: #000;
 	opacity: 0.5;
 	text-decoration: none
 }
-a:hover {
+.pretty-button:active{
 	color: #000;
-	opacity: 0.75;
+	opacity: 0.5;
 	text-decoration: none
 }
+
+.pretty-button:hover{
+	color: #000;
+	opacity: 0.5;
+	text-decoration: none
+}
+
 .tools {
 	display: block;
 	position: absolute;
@@ -232,12 +245,22 @@ a:hover {
 }
 
 /* Modal Content/Box */
-.modal-content {
+.modal-generate-content {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* Modal Content/Box */
+.modal-login-content {
+	max-width:600px;
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 20%; /* Could be more or less, depending on screen size */
 }
 
 /* The Close Button */
@@ -261,6 +284,7 @@ a:hover {
 
 .button {
     border: 1px solid #000000;
+    font-weight: bold;
     color: #000000;
     background-color: #ffffff;
     display: inline-block;
@@ -273,3 +297,19 @@ a:hover {
     cursor: pointer;
     margin: 5px 0 5px 5px;
 }
+
+.inputtext{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.wide-button{
+    padding: 14px 0px;
+    margin: 8px 0;
+    width: 100%;
+}
+

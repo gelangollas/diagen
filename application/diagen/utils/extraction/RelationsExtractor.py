@@ -1,6 +1,7 @@
 from .Component import *
 import pymorphy2
 import re
+import time
 
 def extract_relations(text, components):
 	relations = []
@@ -10,7 +11,6 @@ def extract_relations(text, components):
 			res, rel = _try_find_relations(text, components[i], components[j])
 			if res:
 				relations.extend(rel)
-
 	return relations
 
 def _try_find_relations(text, c1, c2):
@@ -47,17 +47,19 @@ def _try_find_relation_in_sentence(text, c1, c2):
 	i = c1.text_pos + c1.length
 	j = c2.text_pos
 	text_between_components = text[i:j]
+	print(text_between_components)
+
 	words = re.findall(r"[\w']+", text_between_components)
 
-	analyzer = pymorphy2.MorphAnalyzer()
 	for word in reversed(words):
-		if _is_relation_verb(word, analyzer):
+		if _is_relation_verb(word):
 			return True, Relation(word, c1.prototype, c2.prototype)
 
 	return False, None
 
-def _is_relation_verb(word, morph):
-	tag = morph.parse(word)[0].tag
+analyzer = pymorphy2.MorphAnalyzer()
+def _is_relation_verb(word):
+	tag = analyzer.parse(word)[0].tag
 	if 'VERB' in tag:
 		return True
 	return False
