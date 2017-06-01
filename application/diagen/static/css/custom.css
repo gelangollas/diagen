@@ -5,6 +5,7 @@ html, body {
     margin: 0;
 	overflow-x: hidden;
 	overflow-y: hidden;
+	font-family: Arial, sans-serif;
 }
 
 h1 {
@@ -17,7 +18,7 @@ img {
     border: 0;
 }
 a:-webkit-any-link {
-    color: -webkit-link;
+    color: black;
     cursor: auto;
     text-decoration: none;
 }
@@ -122,7 +123,6 @@ a:-webkit-any-link {
 	z-index: 4;
 	top: 25px;
 	right: 20px;
-	font-family: Calibri, Helvetica, sans-serif;
 	font-weight: bold;
 	border-radius: 5px;
 }
@@ -207,18 +207,18 @@ a:-webkit-any-link {
 	padding: 70px 10px 200px 20px;
 }
 .content p {
-	font-family: Calibri, Helvetica, sans-serif
+	font-family: Arial, Helvetica, sans-serif;
 }
 .content label{
 	display: block;
-	font-family: Calibri, Helvetica, sans-serif;
+	font-family: Arial, Helvetica, sans-serif;
 	color: #93a1a1;
 	margin-top: 1em;
 }
 .content h2{
 	font-size: inherit;
 	display: block;
-	font-family: Calibri, Helvetica, sans-serif;
+	font-family: Arial, Helvetica, sans-serif;
 	color: #93a1a1;
 	margin-top: 1em;
 }
@@ -226,7 +226,7 @@ a:-webkit-any-link {
 	display: inline-block;
 	font-weight: normal;
 	width: 40%;
-	font-family: Calibri, Helvetica, sans-serif;
+	font-family: Arial, Helvetica, sans-serif;
 	color: #93a1a1;
 }
 
@@ -296,6 +296,12 @@ a:-webkit-any-link {
     text-align: center;
     cursor: pointer;
     margin: 5px 0 5px 5px;
+}
+
+.closecross {
+	display: inline-block;
+	cursor: pointer;
+	float: right;
 }
 
 .inputtext{

@@ -1,6 +1,6 @@
 <div>
 	<div>
-		<label style="font-size: 20px;"><b>{{username}}</b> [<a href="{% url 'logout_user' %}">Выйти</a>]</label>
+		<label style="font-size: 20px;"><b>{{username}}</b> [<a href="{% url 'logout_user' %}" style="color: blue;">Выйти</a>]</label>
 	</div>
 </div>
 <hr color="#cccccc" size="1">
@@ -14,7 +14,7 @@
 <br><label>Сохраненные диаграммы</label>
 <hr color="#cccccc" size="1">
 {% for d in diagrams %}
-	<a href="javascript:diagen.loadDiagramWithId({{d.id}})" style="color: black;"><b>{{d.title}}</b></a>
-	<a style="float: right;" href="javascript:diagen.deleteDiagram({{d.id}})">&#x2716;</a><br>
+	<a href="javascript:diagen.loadDiagramWithId({{d.id}})"><b>{{d.title}}</b></a>
+	<a class="closecross" href="javascript:diagen.deleteDiagram({{d.id}})">&#x2716;</a><br>
 	<hr color="#cccccc" size="1">
 {% endfor %}

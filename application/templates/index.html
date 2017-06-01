@@ -123,14 +123,15 @@
 
 	  <!-- Modal content -->
 	  <div class="modal-generate-content">
-	    <p>Вставьте текст, который является описанием программы, в поле снизу.</p>
+	    <label>Вставьте текст, который является описанием программы, в поле снизу.</label>
+	    <a id="closebybtn" class="closecross">&#x2716;</a>
 
 	    <hr color="#cccccc" size="1">
 	    <textarea name="generatetext" id="generatetext" rows="20" class="gentext"></textarea>
 	    <div align="right">
 	    	<a class="button pretty-button" id="settingstoggle">Настройки</a>
 		    <a class="button pretty-button" id="generatesubmit" data-url="{% url 'generate_diagram' %}">Сгенерировать</a>
-		    <a class="button pretty-button" id="closebybtn">Отмена</a>
+		    <a class="button pretty-button" id="closebybtn1">Отмена</a>
 	    </div>
 
 	    <div id="generatesettings" style="display: none;">
